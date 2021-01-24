@@ -22,8 +22,10 @@ namespace BetterZoom.src.Trackers
         {
             trackers.Add(this);
             Position = pos;
-            PTrackerImg = new UIImage(ModContent.GetTexture("BetterZoom/Assets/PathTracker"));
-            PTrackerImg.ImageScale = 0.5f;
+            PTrackerImg = new UIImage(ModContent.GetTexture("BetterZoom/Assets/PathTracker"))
+            {
+                ImageScale = 0.5f
+            };
 
             CreateCurve();
         }

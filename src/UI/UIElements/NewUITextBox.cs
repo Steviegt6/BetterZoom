@@ -4,27 +4,34 @@ using Microsoft.Xna.Framework.Input;
 using ReLogic.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace BetterZoom.src.UI.UIElements
 {
-    class NewUITextBox : UITextPanel<string>
+    internal class NewUITextBox : UITextPanel<string>
     {
         internal bool focused = false;
         private int _cursor;
         private int _frameCount;
         private int _maxLength = 60;
         private string hintText;
+
         public event Action OnFocus;
+
         public event Action OnUnfocus;
+
         public event Action OnTextChanged;
+
         public event Action OnTabPressed;
+
         public event Action OnEnterPressed;
+
         public event Action OnUpPressed;
+
         internal bool unfocusOnEnter = true;
         internal bool unfocusOnTab = true;
-
 
         public NewUITextBox(string text, float textScale = 1, bool large = false) : base("", textScale, large)
         {
@@ -143,7 +150,7 @@ namespace BetterZoom.src.UI.UIElements
             }
         }
 
-        static bool JustPressed(Keys key)
+        private static bool JustPressed(Keys key)
         {
             return Main.inputText.IsKeyDown(key) && !Main.oldInputText.IsKeyDown(key);
         }
@@ -152,8 +159,7 @@ namespace BetterZoom.src.UI.UIElements
         {
             Rectangle hitbox = GetDimensions().ToRectangle();
 
-            Main.spriteBatch.Draw(Main.magicPixel, hitbox, Color.White);
-
+            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.White);
 
             if (focused)
             {
@@ -199,7 +205,7 @@ namespace BetterZoom.src.UI.UIElements
 
             CalculatedStyle innerDimensions = GetInnerDimensions();
             Vector2 pos = innerDimensions.Position();
-            DynamicSpriteFont spriteFont = IsLarge ? Main.fontDeathText : Main.fontMouseText;
+            DynamicSpriteFont spriteFont = IsLarge ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
             Vector2 vector = new Vector2(spriteFont.MeasureString(Text.Substring(0, _cursor)).X, IsLarge ? 32f : 16f) * TextScale;
             if (IsLarge)
             {

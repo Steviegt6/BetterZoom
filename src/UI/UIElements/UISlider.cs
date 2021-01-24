@@ -2,13 +2,16 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.Graphics;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace BetterZoom.src.UI.UIElements
 {
-    class UISlider : UIElement
+    internal class UISlider : UIElement
     {
         private Color _color;
         private Func<string> _TextDisplayFunction;
@@ -23,7 +26,7 @@ namespace BetterZoom.src.UI.UIElements
         public UISlider(Func<string> getText, Func<float> getStatus, Action<float> setStatusKeyboard, Action setStatusGamepad, int sliderIDInPage, Color color)
         {
             _color = color;
-            _toggleTexture = TextureManager.Load("Images/UI/Settings_Toggle");
+            _toggleTexture = Main.Assets.Request<Texture2D>("Images\\UI\\Settings_Toggle").Value;
             _TextDisplayFunction = getText ?? (() => "???");
             _GetStatusFunction = getStatus ?? (() => 0f);
             _SlideKeyboardAction = setStatusKeyboard ?? ((s) => { });
@@ -40,26 +43,30 @@ namespace BetterZoom.src.UI.UIElements
         {
             colorRange = isHue;
         }
+
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            Main.PlaySound(SoundID.MenuTick);
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
+
         public override void Click(UIMouseEvent evt)
         {
             base.Click(evt);
-            Main.PlaySound(SoundID.MenuTick);
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
-        int paddingY = 4;
-        int paddingX = 5;
+
+        private int paddingY = 4;
+        private int paddingX = 5;
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             CalculatedStyle dimensions = base.GetInnerDimensions();
             Rectangle rectangle = dimensions.ToRectangle();
-            spriteBatch.Draw(Main.colorBarTexture, rectangle, Color.White);
+            spriteBatch.Draw(TextureAssets.ColorBar.Value, rectangle, Color.White);
             if (IsMouseHovering)
             {
-                spriteBatch.Draw(Main.colorHighlightTexture, rectangle, Main.OurFavoriteColor);
+                spriteBatch.Draw(TextureAssets.ColorHighlight.Value, rectangle, Main.OurFavoriteColor);
             }
 
             rectangle.Inflate(-paddingX, -paddingY);
@@ -74,17 +81,17 @@ namespace BetterZoom.src.UI.UIElements
             {
                 float amount = i / rectangle.Width;
                 Color color = colorRange ? Main.hslToRgb(amount, 1f, 0.5f) : Color.Lerp(Color.Black, Color.White, amount);
-                spriteBatch.Draw(Main.colorBlipTexture, new Vector2(x + i * scale, y),
+                spriteBatch.Draw(TextureAssets.ColorBlip.Value, new Vector2(x + i * scale, y),
                     null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
 
             float percent = _GetStatusFunction();
             percent = Utils.Clamp(percent, 0f, 1f);
 
-            spriteBatch.Draw(Main.colorSliderTexture,
+            spriteBatch.Draw(TextureAssets.ColorSlider.Value,
                 new Vector2(x + rectangle.Width * scale * percent, y + 4f * scale),
                 null, Color.White, 0f,
-                new Vector2(0.5f * Main.colorSliderTexture.Width, 0.5f * Main.colorSliderTexture.Height),
+                new Vector2(0.5f * TextureAssets.ColorSlider.Width(), 0.5f * TextureAssets.ColorSlider.Height()),
                 scale, SpriteEffects.None, 0f);
 
             // LOGIC

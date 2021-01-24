@@ -63,8 +63,10 @@ namespace BetterZoom.src.UI.UIElements
         {
             data = defaultValue;
             this.max = max;
-            range = new UIRange<int>(label, () => (float)Data / max, (s) => { Data = (int)(s * max); }, ValidateInput, fine);
-            range.intDataRangeProperty = this;
+            range = new UIRange<int>(label, () => (float)Data / max, (s) => { Data = (int)(s * max); }, ValidateInput, fine)
+            {
+                intDataRangeProperty = this
+            };
             //range.Top.Set(top, 0f);
             range.Width.Set(0, 1f);
             Data = data;

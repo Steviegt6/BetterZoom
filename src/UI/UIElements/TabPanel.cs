@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
@@ -8,7 +9,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace BetterZoom.src.UI.UIElements
 {
-    class Tab : UITextPanel<string>
+    internal class Tab : UITextPanel<string>
     {
         public UIState _changeStateTo;
 
@@ -21,31 +22,34 @@ namespace BetterZoom.src.UI.UIElements
         {
             _changeStateTo = changeStateTo;
         }
+
         public override void OnInitialize()
         {
             SetPadding(7);
             BackgroundColor.A = 255; // solid color
         }
+
         public override void Click(UIMouseEvent evt)
         {
             // update Last tab
             TabPanel.lastTab = _changeStateTo;
 
             // change UIState and play click sound
-            GetInstance<BetterZoom>().UserInterface.SetState(_changeStateTo);
-            Main.PlaySound(SoundID.MenuTick);
+            UIModSystem.UserInterface.SetState(_changeStateTo);
+            SoundEngine.PlaySound(SoundID.MenuTick);
         }
+
         public override void Update(GameTime gameTime)
         {
             // Highlight
-            if (GetInstance<BetterZoom>().UserInterface.CurrentState == _changeStateTo)
+            if (UIModSystem.UserInterface.CurrentState == _changeStateTo)
             {
                 BackgroundColor = new Color(73, 94, 171);
             }
         }
     }
 
-    class TabPanel : DragableUIPanel
+    internal class TabPanel : DragableUIPanel
     {
         /// <summary>
         /// List of all Tabs
@@ -66,6 +70,7 @@ namespace BetterZoom.src.UI.UIElements
             Height.Pixels = height;
             Tabs = tabs;
         }
+
         public override void OnInitialize()
         {
             // set correct position for all tabs

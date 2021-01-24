@@ -3,27 +3,27 @@ using Terraria.ModLoader.IO;
 
 namespace BetterZoom.src
 {
-    class SaveLoad : ModPlayer
+    internal class SaveLoad : ModPlayer
     {
         public override TagCompound Save()
         {
             return new TagCompound {
 				// {"somethingelse", somethingelse}, // To save more data, add additional lines
-				{"zoom", BetterZoom.zoom},
-                {"uiscale", BetterZoom.uiScale},
-                {"flipbackground", BetterZoom.flipBackground},
-                {"hotbarscale", BetterZoom.hotbarScale},
-                {"zoombackground", BetterZoom.zoomBackground}
+				{"zoom", UIModSystem.zoom},
+                {"uiscale", UIModSystem.uiScale},
+                {"flipbackground", UIModSystem.flipBackground},
+                {"hotbarscale", UIModSystem.hotbarScale},
+                {"zoombackground", UIModSystem.zoomBackground}
             };
         }
 
         public override void Load(TagCompound tag)
         {
-            BetterZoom.zoom = tag.GetFloat("zoom");
-            BetterZoom.uiScale = tag.GetFloat("uiscale");
-            BetterZoom.flipBackground = tag.GetBool("flipbackground");
-            BetterZoom.hotbarScale = tag.GetFloat("hotbarscale");
-            BetterZoom.zoomBackground = tag.GetBool("zoombackground");
+            UIModSystem.zoom = tag.GetFloat("zoom");
+            UIModSystem.uiScale = tag.GetFloat("uiscale");
+            UIModSystem.flipBackground = tag.GetBool("flipbackground");
+            UIModSystem.hotbarScale = tag.GetFloat("hotbarscale");
+            UIModSystem.zoomBackground = tag.GetBool("zoombackground");
         }
     }
 }

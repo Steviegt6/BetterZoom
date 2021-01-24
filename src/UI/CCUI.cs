@@ -1,6 +1,7 @@
 ﻿using BetterZoom.src.Trackers;
 using BetterZoom.src.UI.UIElements;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Graphics;
@@ -9,17 +10,18 @@ using Terraria.UI;
 
 namespace BetterZoom.src.UI
 {
-    class CCUI : UIState
+    internal class CCUI : UIState
     {
-        UITextPanel<string> playButton;
-        UIFloatRangedDataValue speed;
-        byte placing;
-        byte move = 0;
-        bool erasing;
-        bool moving;
+        private UITextPanel<string> playButton;
+        private UIFloatRangedDataValue speed;
+        private byte placing;
+        private byte move = 0;
+        private bool erasing;
+        private bool moving;
         public static UIToggleImage lockScreenBtn;
         public static byte selectedInterp = 2;
         public static UIImage placeTracker;
+
         public override void OnInitialize()
         {
             Camera.fixedscreen = Main.LocalPlayer.position - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2);
@@ -30,7 +32,7 @@ namespace BetterZoom.src.UI
                 );
             Menu.Left.Set(DragableUIPanel.lastPos.X, 0f);
             Menu.Top.Set(DragableUIPanel.lastPos.Y, 0f);
-            Menu.OnCloseBtnClicked += () => ModContent.GetInstance<BetterZoom>().UserInterface.SetState(null);
+            Menu.OnCloseBtnClicked += () => UIModSystem.UserInterface.SetState(null);
             Append(Menu);
 
             speed = new UIFloatRangedDataValue("Tracking Speed", 1, 0.1f, 100);
@@ -59,7 +61,8 @@ namespace BetterZoom.src.UI
 
             DragableUIPanel ConfirmPanel = new DragableUIPanel("Are you sure you want to remove all trackers?", 700, 120);
             UIHoverImageButton DelBtn = new UIHoverImageButton("BetterZoom/Assets/DelButton", "Delete all Trackers");
-            DelBtn.OnClick += (evt, elm) => {
+            DelBtn.OnClick += (evt, elm) =>
+            {
                 if (!ConfirmPanel.active)
                 {
                     ConfirmPanel.Left.Set(1000, 0f);
@@ -68,21 +71,25 @@ namespace BetterZoom.src.UI
                     ConfirmPanel.Height.Set(120, 0f);
                     Append(ConfirmPanel);
 
-                    UITextPanel<string> yep = new UITextPanel<string>("Yes");
-                    yep.HAlign = 0.2f;
-                    yep.VAlign = 0.7f;
+                    UITextPanel<string> yep = new UITextPanel<string>("Yes")
+                    {
+                        HAlign = 0.2f,
+                        VAlign = 0.7f
+                    };
                     yep.Width.Set(100, 0f);
                     yep.OnClick += (evt1, elm1) => { PathTrackers.RemoveAll(); ConfirmPanel.Remove(); };
                     ConfirmPanel.Append(yep);
 
-                    UITextPanel<string> nop = new UITextPanel<string>("No");
-                    nop.HAlign = 0.8f;
-                    nop.VAlign = 0.7f;
+                    UITextPanel<string> nop = new UITextPanel<string>("No")
+                    {
+                        HAlign = 0.8f,
+                        VAlign = 0.7f
+                    };
                     nop.Width.Set(100, 0f);
                     nop.OnClick += (evt1, elm1) => { ConfirmPanel.Remove(); };
                     ConfirmPanel.Append(nop);
                 }
-            }; 
+            };
             DelBtn.MarginLeft = 285;
             DelBtn.MarginTop = 190;
             Menu.Append(DelBtn);
@@ -103,9 +110,11 @@ namespace BetterZoom.src.UI
             MoveBtn.MarginTop = 190;
             Menu.Append(MoveBtn);
 
-            lockScreenBtn = new UIToggleImage(TextureManager.Load("Images/UI/Settings_Toggle"), 13, 13, new Point(17, 1), new Point(1, 1));
-            lockScreenBtn.MarginTop = 100;
-            lockScreenBtn.MarginLeft = 250;
+            lockScreenBtn = new UIToggleImage(Main.Assets.Request<Texture2D>("Images\\UI\\Settings_Toggle"), 13, 13, new Point(17, 1), new Point(1, 1))
+            {
+                MarginTop = 100,
+                MarginLeft = 250
+            };
             lockScreenBtn.OnClick += (evt, elm) =>
             {
                 Camera.fixedscreen = Main.screenPosition;
@@ -135,25 +144,31 @@ namespace BetterZoom.src.UI
 
             Dpad[3].OnMouseDown += (evt, elm) => move = 4;
             Dpad[3].OnMouseUp += (evt, elm) => move = 0;
-            Dpad[3].OnClick += (evt, elm) => Camera.locked = true;        
+            Dpad[3].OnClick += (evt, elm) => Camera.locked = true;
 
-            var hideTrackersBtn = new UIToggleImage(TextureManager.Load("Images/UI/Settings_Toggle"), 13, 13, new Point(17, 1), new Point(1, 1));
-            hideTrackersBtn.MarginTop = 250;
-            hideTrackersBtn.MarginLeft = 250;
+            var hideTrackersBtn = new UIToggleImage(Main.Assets.Request<Texture2D>("Images\\UI\\Settings_Toggle"), 13, 13, new Point(17, 1), new Point(1, 1))
+            {
+                MarginTop = 250,
+                MarginLeft = 250
+            };
             hideTrackersBtn.OnClick += (evt, elm) => TrackerUI.hide = !TrackerUI.hide;
             hideTrackersBtn.Append(new UIText("Hide Trackers", 0.9f) { MarginLeft = -230 });
             Menu.Append(hideTrackersBtn);
 
             // Control Buttons
-            playButton = new UITextPanel<string>("Play");
-            playButton.VAlign = 0.9f;
-            playButton.HAlign = 0.1f;
+            playButton = new UITextPanel<string>("Play")
+            {
+                VAlign = 0.9f,
+                HAlign = 0.1f
+            };
             playButton.OnClick += (evt, elm) => Camera.PlayStopTracking();
             Menu.Append(playButton);
 
-            UITextPanel<string> pauseButton = new UITextPanel<string>("Pause");
-            pauseButton.VAlign = 0.9f;
-            pauseButton.HAlign = 0.5f;
+            UITextPanel<string> pauseButton = new UITextPanel<string>("Pause")
+            {
+                VAlign = 0.9f,
+                HAlign = 0.5f
+            };
             pauseButton.OnClick += (evt, elm) =>
             {
                 Camera.PauseTracking();
@@ -161,9 +176,11 @@ namespace BetterZoom.src.UI
             };
             Menu.Append(pauseButton);
 
-            var repeatBtn = new UITextPanel<string>("Repeat");
-            repeatBtn.VAlign = 0.9f;
-            repeatBtn.HAlign = 0.9f;
+            var repeatBtn = new UITextPanel<string>("Repeat")
+            {
+                VAlign = 0.9f,
+                HAlign = 0.9f
+            };
             repeatBtn.OnClick += (evt, elm) =>
             {
                 Camera.repeat = !Camera.repeat;
@@ -173,6 +190,7 @@ namespace BetterZoom.src.UI
 
             placeTracker = new UIImage(ModContent.GetTexture("BetterZoom/Assets/PathTracker"));
         }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -259,15 +277,19 @@ namespace BetterZoom.src.UI
                 case 1:
                     Camera.fixedscreen += new Vector2(0, -5f);
                     break;
+
                 case 2:
                     Camera.fixedscreen += new Vector2(0, 5f);
                     break;
+
                 case 3:
                     Camera.fixedscreen += new Vector2(-5f, 0);
                     break;
+
                 case 4:
                     Camera.fixedscreen += new Vector2(5f, 0);
                     break;
+
                 default:
                     break;
             }

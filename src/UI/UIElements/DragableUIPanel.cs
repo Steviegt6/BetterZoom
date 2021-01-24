@@ -27,9 +27,11 @@ namespace BetterZoom.src.UI.UIElements
             header.OnMouseUp += Header_OnMouseUp;
             Append(header);
 
-            var heading = new UIText(headingtext, 0.9f);
-            heading.VAlign = 0.5f;
-            heading.MarginLeft = 16f;
+            var heading = new UIText(headingtext, 0.9f)
+            {
+                VAlign = 0.5f,
+                MarginLeft = 16f
+            };
             header.Append(heading);
 
             var closeBtn = new UITextPanel<char>('X');

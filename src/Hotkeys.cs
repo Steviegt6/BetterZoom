@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace BetterZoom.src
 {
-    class Hotkeys : ModPlayer
+    internal class Hotkeys : ModPlayer
     {
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -29,9 +29,8 @@ namespace BetterZoom.src
             }
             if (BetterZoom.ShowUI.JustPressed)
             {
-                var ui = ModContent.GetInstance<BetterZoom>().UserInterface;
-                ModContent.GetInstance<BetterZoom>().UserInterface.SetState(ui.CurrentState == null ? UI.UIElements.TabPanel.lastTab : null);
-
+                var ui = UIModSystem.UserInterface;
+                UIModSystem.UserInterface.SetState(ui.CurrentState == null ? UI.UIElements.TabPanel.lastTab : null);
             }
             // Control screen Position
             if (Camera.locked)
@@ -47,18 +46,17 @@ namespace BetterZoom.src
 
                 if (Main.keyState.IsKeyDown(Keys.Right))
                     Camera.fixedscreen += new Vector2(5, 0);
-
             }
             // Control UI Scale
             if (Main.keyState.IsKeyDown(Keys.LeftShift) || Main.keyState.IsKeyDown(Keys.RightShift))
             {
                 if (Main.keyState.IsKeyDown(Keys.OemMinus))
                 {
-                    BetterZoom.uiScale -= 0.01f;
+                    UIModSystem.uiScale -= 0.01f;
                 }
                 if (Main.keyState.IsKeyDown(Keys.OemPlus))
                 {
-                    BetterZoom.uiScale += 0.01f;
+                    UIModSystem.uiScale += 0.01f;
                 }
             }
             // Control Zoom
@@ -66,11 +64,11 @@ namespace BetterZoom.src
             {
                 if (Main.keyState.IsKeyDown(Keys.OemMinus))
                 {
-                    BetterZoom.zoom -= 0.01f;
+                    UIModSystem.zoom -= 0.01f;
                 }
                 if (Main.keyState.IsKeyDown(Keys.OemPlus))
                 {
-                    BetterZoom.zoom += 0.01f;
+                    UIModSystem.zoom += 0.01f;
                 }
             }
         }
